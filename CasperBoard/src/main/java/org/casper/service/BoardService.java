@@ -3,6 +3,7 @@ package org.casper.service;
 import java.util.List;
 
 import org.casper.domain.Board;
+import org.casper.domain.BoardAttachVO;
 import org.casper.domain.PageParam;
 
 public interface BoardService {
@@ -18,4 +19,6 @@ public interface BoardService {
 	public int modify(Board board);
 	
 	public int getTotal();
+	
+	public List<BoardAttachVO> getAttachList(int bno);
 }

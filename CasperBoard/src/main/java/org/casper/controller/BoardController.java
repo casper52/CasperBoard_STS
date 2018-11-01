@@ -1,14 +1,21 @@
 package org.casper.controller;
 
+import java.util.List;
+
 import org.casper.domain.Board;
+import org.casper.domain.BoardAttachVO;
 import org.casper.domain.PageParam;
 import org.casper.service.BoardService;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import lombok.AllArgsConstructor;
@@ -27,6 +34,14 @@ public class BoardController {
 		log.info("list page......");
 		param.setTotal(service.getTotal());
 		model.addAttribute("list",service.getList(param));
+	}
+	
+	@GetMapping(value = "/getAttachList", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+	@ResponseBody
+	public ResponseEntity<List<BoardAttachVO>> getAttachList(int bno){
+		log.info("getAttachList "+bno);
+		
+		return new ResponseEntity<>(service.getAttachList(bno),HttpStatus.OK);
 	}
 	
 	@GetMapping("/register")

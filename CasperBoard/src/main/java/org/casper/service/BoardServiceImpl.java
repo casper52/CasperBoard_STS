@@ -3,6 +3,7 @@ package org.casper.service;
 import java.util.List;
 
 import org.casper.domain.Board;
+import org.casper.domain.BoardAttachVO;
 import org.casper.domain.PageParam;
 import org.casper.mapper.BoardAttachMapper;
 import org.casper.mapper.BoardMapper;
@@ -71,6 +72,12 @@ public class BoardServiceImpl implements BoardService{
 	public int getTotal() {
 		
 		return mapper.count();
+	}
+
+	@Override
+	public List<BoardAttachVO> getAttachList(int bno) {
+		
+		return attachMapper.findByBno(bno);
 	}
 	
 	
