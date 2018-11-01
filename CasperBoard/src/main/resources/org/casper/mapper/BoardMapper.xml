@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- 인터페이스와 동일하게 이름을 맞추어주어야 함. 메소드 이름은 id -->
+<mapper namespace="org.casper.mapper.BoardMapper">
+
+<sql id="search">
+ <if test="types != null">
+  <foreach item="item" collection="types" open="and (" close= ")" separator="or">
+  	<if test="item == 't'.toString()">
+  	title like concat('%',#{keyword},'%')
+  	</if>
+  	<if test="item == 'c'.toString()">
+  	content like concat('%',#{keyword},'%')
+  	</if>
+  	<if test="item == 'w'.toString()">
+  	tb.mid like concat('%',#{keyword},'%')
+  	</if>
+  </foreach>
+ </if>
+</sql>
+
+	<select id="getList" resultType="org.casper.domain.Board">
+		select tb.bno, tb.title, tb.content, tb.mid, tb.regdate, tb.updatedate
+		from tbl_board as tb
+		join tbl_member as tm
+		where 1 = 1
+		
+		<include refid="search"></include>
+		
+		and bno > (select max(bno) - 3000 from tbl_board)
+		and tm.mid = tb.mid 
+		and del = 0
+		order by bno desc limit #{skip},#{display}
+	</select>
+	
+	<insert id="insert">
+	insert into tbl_board(title, content, mid) values (#{title}, #{content}, #{mid})
+	</insert>
+	
+	<select id="read" resultType="org.casper.domain.Board">
+		select * from tbl_board where bno = #{bno}
+	</select>
+	
+	<update id="remove">
+	update tbl_board set del = '1' where bno = #{bno}
+	</update>
+	
+	<update id="modify">
+	update tbl_board set title = #{title}, content = #{content}, updatedate = now() where bno= #{bno}
+	</update>
+	
+	<select id="count" resultType="Integer">
+		select count(*) from tbl_board
+		where 1 = 1
+		<include refid="search"></include>
+		and bno > (select max(bno) - 3000 from tbl_board)
+	</select>
+</mapper>

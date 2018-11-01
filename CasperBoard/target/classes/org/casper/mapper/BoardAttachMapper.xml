@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- 인터페이스와 동일하게 이름을 맞추어주어야 함. 메소드 이름은 id -->
+<mapper namespace="org.casper.mapper.BoardAttachMapper">
+
+	<insert id="insert">
+		<selectKey keyProperty="bno" order="BEFORE" resultType="Integer">
+		select max(bno) from tbl_board
+		</selectKey>
+		
+	insert into tbl_attach (uuid, uploadpath, fileName, filetype, bno)
+	values (#{uuid},#{uploadPath},#{fileName},#{fileType},#{bno})
+	</insert>
+	
+	<delete id="delete">
+	delete from tbl_attach where uuid = #{uuid}
+	</delete>
+	
+	<select id="findByBno" resultType="org.casper.domain.BoardAttachVO">
+	select * from tbl_attach where bno = #{bno}
+	</select>
+</mapper>
