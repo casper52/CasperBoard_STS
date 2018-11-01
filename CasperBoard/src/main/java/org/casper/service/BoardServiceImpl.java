@@ -56,15 +56,29 @@ public class BoardServiceImpl implements BoardService{
 		return mapper.read(param);
 	}
 
+	@Transactional
 	@Override
 	public int remove(PageParam param) {
 		
+		attachMapper.deleteall(param.getBno());
 		return mapper.remove(param);
 	}
 
+	@Transactional
 	@Override
 	public int modify(Board board) {
 		
+		
+		attachMapper.deleteall(board.getBno());
+		boolean modifyResult = mapper.modify(board) == 1;
+		
+		if(modifyResult && board.getAttachList().size() > 0) {
+			board.getAttachList().forEach(attach -> {
+				
+				attach.setBno(board.getBno());
+				attachMapper.insert(attach);
+			});
+		}
 		return mapper.modify(board);
 	}
 

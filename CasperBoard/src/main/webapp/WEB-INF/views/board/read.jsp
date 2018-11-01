@@ -54,7 +54,7 @@
 	align-items: center;
 }
 .bigPicture img{
-	width:100%;	
+	width: 600px;	
 }
 </style>
 <div class="page-title">
