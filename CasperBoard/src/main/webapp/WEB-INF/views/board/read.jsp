@@ -167,10 +167,34 @@
 <script src="https://code.jquery.com/jquery-3.3.1.min.js"
 	integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
 	crossorigin="anonymous"></script>
+<script type="text/javascript" src="/resources/js/reply.js"></script>
+<script>
+
+console.log("==================");
+console.log("JS TEST");
+
+var bnoValue = '<c:out value="${pageObj.bno}"/>';
+
+replyService.getList({bno:bnoValue, page:1}, function(list){
+	
+	for(var i = 0, len = list.length||0; i < len; i++){
+		console.log(list[i]);
+	}
+
+});
+
+replyService.read(17,function(data){
+	console.log(data);
+})
+
+
+</script>	
 	
 <script>
 
 $(document).ready(function(){
+	
+		console.log(replyService);
 	
 		var bno = '<c:out value="${pageObj.bno}"/>';
 		
