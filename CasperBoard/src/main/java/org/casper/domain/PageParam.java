@@ -19,6 +19,11 @@ public class PageParam {
 		this.page = 1;
 	}
 	
+	public PageParam(int page, int display) {
+		this.page = page;
+		this.display = display;
+	}
+	
 	public void setType(String type) {
 		this.type = type;
 		if(type == null || type.trim().length() == 0) {
