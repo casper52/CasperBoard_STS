@@ -105,55 +105,21 @@
 								</form>
 
 					<h3 class="push-down-20">Comments</h3>
-					<ul class="media-list">
-						<li class="media"><a class="pull-left" href="#"> <img
-								class="media-object img-text" src="/resources/assets/images/users/user.jpg"
+					<ul class="chat">
+						<li class="media" data-rno='12'><a class="pull-left" href="#">
+						<img class="media-object img-text" src="/resources/assets/images/users/no-image.jpg"
 								alt="Dmitry Ivaniuk" width="64">
 						</a>
 							<div class="media-body">
-								<h4 class="media-heading">Dmitry Ivaniuk</h4>
-								<p>Cras sit amet nibh libero, in gravida nulla. Nulla vel
-									metus scelerisque ante sollicitudin commodo. Cras purus odio,
-									vestibulum in vulputate at, tempus viverra turpis. Fusce
-									condimentum nunc ac nisi vulputate fringilla. Donec lacinia
-									congue felis in faucibus.</p>
+								<h4 class="media-heading">Dmitry</h4>
+								<p>test
+									</p>
 								<p class="text-muted">October 24, 2014, 15:20</p>
-								<div class="media">
-									<a class="pull-left" href="#"> <img
-										class="media-object img-text"
-										src="/resources/assets/images/users/user6.jpg" alt="Darh Vader"
-										width="64">
-									</a>
-									<div class="media-body">
-										<h4 class="media-heading">Darth Vader</h4>
-										<p>What? What did you say? It's not even a language...</p>
-										<p class="text-muted">October 24, 2014, 16:20</p>
-									</div>
-								</div>
-							</div></li>
-						<li class="media"><a class="pull-left" href="#"> <img
-								class="media-object img-text"
-								src="/resources/assets/images/users/user7.jpg" alt="Samuel Leroy Jackson"
-								width="64">
-						</a>
-							<div class="media-body">
-								<h4 class="media-heading">Samuel Leroy Jackson</h4>
-								<p>We happy? Vincent, we happy?</p>
-								<p class="text-muted">October 24, 2014, 14:30</p>
-								<div class="media">
-									<a class="pull-left" href="#"> <img
-										class="media-object img-text"
-										src="/resources/assets/images/users/user5.jpg" alt="John Travolta"
-										width="64">
-									</a>
-									<div class="media-body">
-										<h4 class="media-heading">John Travolta</h4>
-										<p>Yeeees we happy!</p>
-										<p class="text-muted">October 24, 2014, 14:32</p>
-									</div>
-								</div>
+								
 							</div></li>
 					</ul>
+					
+					<button id="addReplyBtn" class="btn btn-primary pull-left">New Comment</button>
 				</div>
 			</div>
 
@@ -163,40 +129,169 @@
 
 </div>
 <!-- END PAGE CONTENT WRAPPER -->
+<div class="modal in" id="myModal" tabindex="-1" role="dialog" aria-labelledby="largeModalHead" aria-hidden="false" style="display:none;"><div class="modal-backdrop  in"></div>
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title" id="defModalHead">Reply Modal</h4>
+            </div>
+            <div class="modal-body">
+              			<div class="form-group">
+							<label class="col-md-3 col-xs-12 control-label">Reply</label>
+							<input type="text" class="form-control" name="reply" value='New Reply!!'/>
+						</div>
+						<div class="form-group">
+							<label class="col-md-3 col-xs-12 control-label">Replyer</label>
+							 <input type="text" class="form-control" name="replyer" value='replyer'/>
+						</div>
+						<div class="form-group">
+							<label class="col-md-3 col-xs-12 control-label">Reply Date</label>
+							<input type="text" class="form-control" name="replyDate" value=''/>
+						</div>
+						<div class="modal-footer">
+                <button id='modalModBtn' type="button" class="btn btn-primary btn-rounded" data-dismiss="modal">Modify</button>
+                <button id='modalRemoveBtn' type="button" class="btn btn-primary btn-rounded" data-dismiss="modal">Remove</button>
+                <button id='modalRegisterBtn' type="button" class="btn btn-primary btn-rounded" data-dismiss="modal">Register</button>
+                <button id='modalCloseBtn' type="button" class="btn btn-primary btn-rounded" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
 <script src="https://code.jquery.com/jquery-3.3.1.min.js"
 	integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
 	crossorigin="anonymous"></script>
 <script type="text/javascript" src="/resources/js/reply.js"></script>
-<script>
 
-console.log("==================");
-console.log("JS TEST");
-
-var bnoValue = '<c:out value="${pageObj.bno}"/>';
-
-replyService.getList({bno:bnoValue, page:1}, function(list){
-	
-	for(var i = 0, len = list.length||0; i < len; i++){
-		console.log(list[i]);
-	}
-
-});
-
-replyService.read(17,function(data){
-	console.log(data);
-})
-
-
-</script>	
-	
 <script>
 
 $(document).ready(function(){
 	
-		console.log(replyService);
-	
 		var bno = '<c:out value="${pageObj.bno}"/>';
+		var replyUL = $(".chat");
+		
+		showList(1);
+		
+		function showList(page){
+			
+			replyService.getList({bno:bno, page:page||1}, function(list){
+				
+				var str="";
+				if(list == null || list.length == 0){
+					replyUL.html("");
+					
+					return;
+				}
+				for(var i = 0, len = list.length || 0; i < len; i++){
+					str +="<li class='media' data-rno='"+list[i].rno+"'>";
+					str +="<a class='pull-left' href='#''> <img class='media-object img-text' src='/resources/assets/images/users/user.jpg' alt='Dmitry Ivaniuk' width='64'></a>";
+					str +="<div class='media-body'><h4 class='media-heading'>"+list[i].replyer+"</h4>";
+					str +="<p>"+list[i].reply+"</p>";
+					str +="<p class='text-muted'>"+replyService.displayTime(list[i].replyDate)+"</p></div></li></ul>"
+			
+				}
+				
+			replyUL.html(str);
+			});
+		}
+		
+		var modal = $("#myModal");
+		var modalInputReply = modal.find("input[name='reply']");
+		var modalInputReplyer = modal.find("input[name='replyer']");
+		var modalInputReplyDate = modal.find("input[name='replyDate']");
+		
+		var modalModBtn = $("#modalModBtn");
+		var modalRemoveBtn = $("#modalRemoveBtn");
+		var modalRegisterBtn = $("#modalRegisterBtn");
+		var modalCloseBtn = $("#modalCloseBtn");
+		
+		$("#addReplyBtn").on("click",function(e){
+			
+			modal.find("input").val("");
+			modalInputReplyDate.closest("div").hide();
+			modal.find("button[id !='modalCloseBtn']").hide();
+			
+			modalRegisterBtn.show();
+			
+			$("#myModal").show();
+			
+		})
+		
+		modalRegisterBtn.on("click", function(e){
+			
+			var reply = {
+				reply: modalInputReply.val(),
+				replyer: modalInputReplyer.val(),
+				bno: bno
+			};
+			
+			replyService.add(reply, function(result){
+				
+				alert(result);
+				
+				modal.find("input").val("");
+				modal.hide();
+				
+				showList(1);
+			});
+			
+		});
+		
+		$(".chat").on("click","li",function(e){
+			
+			var rno = $(this).data("rno");
+			
+			replyService.read(rno, function(reply){
+				modalInputReply.val(reply.reply);
+				modalInputReplyer.val(reply.replyer);
+				modalInputReplyDate.val(replyService.displayTime(reply.replyDate)).attr("readonly","readonly");
+				modal.data("rno",reply.rno);
+				
+				modal.find("button[id !='modalCloseBtn']").hide();
+				modalModBtn.show();
+				modalRemoveBtn.show();
+				
+				$("#myModal").show();
+				
+			});
+			
+		});
+		
+		modalModBtn.on("click", function(e){
+			
+			var reply = {rno:modal.data("rno"), reply:modalInputReply.val()};
+			
+			replyService.modify(reply, function(result){
+				
+				alert(result);
+				modal.modal("hide");
+				showList(1);
+				
+			});
+			
+		});
+		
+		modalRemoveBtn.on("click", function(e){
+			
+			var rno = modal.data("rno");
+			
+			replyService.remove(rno, function(result){
+				
+				alert(result);
+				modal.modal("hide");
+				showList(1);
+				
+			});
+		});
+		
+		modalCloseBtn.on("click", function(e){
+			 console.log("modal close");
+			 $("#.myModal").hide();
+		});
+		
+		
 		
 		$.getJSON("/board/getAttachList", {bno: bno}, function(arr){
 			console.log(arr);
