@@ -26,7 +26,7 @@
                 <!-- START X-NAVIGATION -->
                 <ul class="x-navigation">
                     <li class="xn-logo">
-                        <a href="/board/list">Casper</a>
+                        <a href="/board/list">CASPER</a>
                         <a href="#" class="x-navigation-control"></a>
                     </li>
                     <li class="xn-profile">
@@ -42,8 +42,8 @@
                                 <div class="profile-data-title">Web Developer</div>
                             </div>
                             <div class="profile-controls">
-                                <a href="pages-profile.html" class="profile-control-left"><span class="fa fa-info"></span></a>
-                                <a href="pages-messages.html" class="profile-control-right"><span class="fa fa-envelope"></span></a>
+                                <a href="/board/profile" class="profile-control-left"><span class="fa fa-info"></span></a>
+                                <a href="/board/messages" class="profile-control-right"><span class="fa fa-envelope"></span></a>
                             </div>
                         </div>                                                                        
                     </li>

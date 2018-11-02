@@ -125,5 +125,11 @@ public class BoardController {
 			}
 		});
 	}
-
+	
+	@GetMapping("/profile")
+	public void profile() {
+		log.info("profile page.....");
+	}
+	
+	
 }
