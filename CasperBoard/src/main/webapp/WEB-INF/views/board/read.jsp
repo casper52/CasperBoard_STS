@@ -56,6 +56,11 @@
 .bigPicture img{
 	width: 600px;	
 }
+
+.comment ul{
+list-style:none;
+padding-left:0px;
+}
 </style>
 <div class="page-title">
 	<h2>
@@ -104,7 +109,9 @@
 									<button type="submit" class="btn btn-default">Modify</button>
 								</form>
 
+			<div class="comment">
 					<h3 class="push-down-20">Comments</h3>
+				
 					<ul class="chat">
 						<li class="media" data-rno='12'><a class="pull-left" href="#">
 						<img class="media-object img-text" src="/resources/assets/images/users/no-image.jpg"
@@ -118,7 +125,10 @@
 								
 							</div></li>
 					</ul>
-					
+				</div>
+				<div class="panel-footer">
+				
+				</div>
 					<button id="addReplyBtn" class="btn btn-primary pull-left">New Comment</button>
 				</div>
 			</div>
@@ -176,26 +186,92 @@ $(document).ready(function(){
 		
 		function showList(page){
 			
-			replyService.getList({bno:bno, page:page||1}, function(list){
+			replyService.getList({bno:bno, page:page||1}, function(replyCnt, list){
+				
+				console.log("replyCnt: " + replyCnt);
+				console.log("list: " + list);
+				console.log(list);
+				
+				if(page == -1){
+					pageNum = Math.ceil(replyCnt/10.0);
+					showList(pageNum);
+					return;
+				}
 				
 				var str="";
 				if(list == null || list.length == 0){
-					replyUL.html("");
 					
 					return;
 				}
 				for(var i = 0, len = list.length || 0; i < len; i++){
 					str +="<li class='media' data-rno='"+list[i].rno+"'>";
 					str +="<a class='pull-left' href='#''> <img class='media-object img-text' src='/resources/assets/images/users/user.jpg' alt='Dmitry Ivaniuk' width='64'></a>";
-					str +="<div class='media-body'><h4 class='media-heading'>"+list[i].replyer+"</h4>";
+					str +="<div class='media-body'><p class='text-warning'>"+list[i].replyer+"</h4>";
 					str +="<p>"+list[i].reply+"</p>";
 					str +="<p class='text-muted'>"+replyService.displayTime(list[i].replyDate)+"</p></div></li></ul>"
 			
 				}
 				
 			replyUL.html(str);
+			
+			showReplyPage(replyCnt);
 			});
 		}
+		
+		var pageNum = 1;
+		var replyPageFooter = $(".panel-footer");
+		
+		function showReplyPage(replyCnt){
+			
+			var endNum = Math.ceil(pageNum/10.0) * 10;
+			var startNum = endNum - 9;
+			
+			var prev = startNum != 1;
+			var next = false;
+			
+			if(endNum * 10 >= replyCnt){
+				endNum = Math.ceil(replyCnt/10.0);
+			}
+			
+			if(endNum * 10 < replyCnt){
+				next = true;
+			}
+			
+			var str = "<ul class='pagination'>";
+			
+			if(prev){
+				str+= "<li class='page-item'><a class='page-link' href='"+(startNum - 1)+"'>prev</a></li>";
+			}
+			
+			for(var i = startNum; i<= endNum; i++){
+				
+				var active = pageNum == i? "active":"";
+				
+				str+= "<li class='page-item "+active+" '><a class='page-link' href='"+i+"'>"+i+"</a></li>";
+			}
+			
+			if(next){
+				str+= "<li class='page-item'><a class='page-link' href='"+(endNum + 1)+"'>next</a></li>";
+			}
+			
+			str += "</ul>";
+			
+			console.log(str);
+			replyPageFooter.html(str);
+		}
+		
+		replyPageFooter.on("click", "li a", function(e){
+			e.preventDefault();
+			console.log("page click");
+			
+			var targetPageNum = $(this).attr("href");
+			
+			console.log("targetPageNum: "+ targetPageNum);
+			
+			pageNum = targetPageNum;
+			
+			showList(pageNum);
+		})
 		
 		var modal = $("#myModal");
 		var modalInputReply = modal.find("input[name='reply']");
@@ -234,7 +310,8 @@ $(document).ready(function(){
 				modal.find("input").val("");
 				modal.hide();
 				
-				showList(1);
+				//showList(1);
+				showList(-1);
 			});
 			
 		});
@@ -266,8 +343,8 @@ $(document).ready(function(){
 			replyService.modify(reply, function(result){
 				
 				alert(result);
-				modal.modal("hide");
-				showList(1);
+				$("#myModal").hide();
+				showList(pageNum);
 				
 			});
 			
@@ -280,8 +357,8 @@ $(document).ready(function(){
 			replyService.remove(rno, function(result){
 				
 				alert(result);
-				modal.modal("hide");
-				showList(1);
+				$("#myModal").hide();
+				showList(pageNum);
 				
 			});
 		});

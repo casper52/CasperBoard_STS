@@ -1,8 +1,7 @@
 package org.casper.controller;
 
-import java.util.List;
-
 import org.casper.domain.PageParam;
+import org.casper.domain.ReplyPageDTO;
 import org.casper.domain.ReplyVO;
 import org.casper.service.ReplyService;
 import org.springframework.http.HttpStatus;
@@ -43,13 +42,12 @@ public class ReplyController {
 	
 	@GetMapping(value = "/pages/{bno}/{page}",
 			produces = { MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_UTF8_VALUE})
-	public ResponseEntity<List<ReplyVO>> getList(@PathVariable("page") int page, @PathVariable("bno") int bno){
+	public ResponseEntity<ReplyPageDTO> getList(@PathVariable("page") int page, @PathVariable("bno") int bno){
 		
-		log.info("get ReplyList....");
 		PageParam param = new PageParam(page,10);
 		log.info(param);
 		
-		return new ResponseEntity<>(service.getList(param, bno), HttpStatus.OK);
+		return new ResponseEntity<>(service.getListPage(param, bno),HttpStatus.OK);
 	}
 	
 	@GetMapping(value = "/{rno}", produces = {MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_UTF8_VALUE})

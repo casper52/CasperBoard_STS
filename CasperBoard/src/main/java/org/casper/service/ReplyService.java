@@ -3,6 +3,7 @@ package org.casper.service;
 import java.util.List;
 
 import org.casper.domain.PageParam;
+import org.casper.domain.ReplyPageDTO;
 import org.casper.domain.ReplyVO;
 
 public interface ReplyService {
@@ -17,4 +18,5 @@ public interface ReplyService {
 	
 	public List<ReplyVO> getList(PageParam param, int bno);
 
+	public ReplyPageDTO getListPage(PageParam param, int bno);
 }

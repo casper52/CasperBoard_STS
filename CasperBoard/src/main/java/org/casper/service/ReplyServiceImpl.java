@@ -3,6 +3,7 @@ package org.casper.service;
 import java.util.List;
 
 import org.casper.domain.PageParam;
+import org.casper.domain.ReplyPageDTO;
 import org.casper.domain.ReplyVO;
 import org.casper.mapper.ReplyMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,5 +48,15 @@ public class ReplyServiceImpl implements ReplyService{
 		return mapper.getListWithPaging(param, bno);
 	}
 
+	@Override
+	public ReplyPageDTO getListPage(PageParam param, int bno) {
+		
+		return new ReplyPageDTO(
+				mapper.getCountByBno(bno),
+				mapper.getListWithPaging(param, bno));
+				
+	}
+
+	
 	
 }

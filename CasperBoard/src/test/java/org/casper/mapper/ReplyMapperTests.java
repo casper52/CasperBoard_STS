@@ -75,4 +75,12 @@ public class ReplyMapperTests {
 		replies.forEach(reply -> log.info(reply));
 	}
 	
+	@Test
+	public void testList2() {
+		PageParam param = new PageParam(2,5);
+		List<ReplyVO> replies = mapper.getListWithPaging(param, 4157);
+		replies.forEach(reply -> log.info(reply));
+		
+	}
+	
 }
