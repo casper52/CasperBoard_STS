@@ -118,10 +118,10 @@ padding-left:0px;
 								alt="Dmitry Ivaniuk" width="64">
 						</a>
 							<div class="media-body">
-								<h4 class="media-heading">Dmitry</h4>
-								<p>test
+								<h4 class="media-heading"></h4>
+								<p>
 									</p>
-								<p class="text-muted">October 24, 2014, 15:20</p>
+								<p class="text-muted"></p>
 								
 							</div></li>
 					</ul>

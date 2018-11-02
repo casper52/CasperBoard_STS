@@ -7,7 +7,7 @@ import org.casper.domain.BoardAttachVO;
 
 public interface BoardAttachMapper {
 
-	public void insert(BoardAttachVO vo);
+	public int insert(BoardAttachVO vo);
 	
 	public void delete(String uuid);
 	

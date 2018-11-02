@@ -63,6 +63,7 @@ public class BoardController {
 		
 		int result = service.insert(board);
 		log.info(result);
+		
 		rttr.addFlashAttribute("result",result == 1?"SUCCESS":"FAIL");
 		
 		return "redirect:/board/list";

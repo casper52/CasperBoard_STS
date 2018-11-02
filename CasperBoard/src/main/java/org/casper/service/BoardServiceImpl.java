@@ -39,7 +39,7 @@ public class BoardServiceImpl implements BoardService{
 		int result = mapper.insert(board);
 		
 		if(board.getAttachList() == null || board.getAttachList().size() <= 0) {
-			return -1;
+			return result;
 		}
 		
 		board.getAttachList().forEach(attach ->{

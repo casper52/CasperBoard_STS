@@ -26,7 +26,7 @@
                 <!-- START X-NAVIGATION -->
                 <ul class="x-navigation">
                     <li class="xn-logo">
-                        <a href="index.html">Casper</a>
+                        <a href="/board/list">Casper</a>
                         <a href="#" class="x-navigation-control"></a>
                     </li>
                     <li class="xn-profile">

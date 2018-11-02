@@ -176,7 +176,7 @@ $(document).ready(function() {
    $(".modelClose").on("click", function(e){
 		  
 	   console.log("--------------------------");
-	   msg.hide('slow');
+	   msg.hide();
 	   
    });
    
@@ -197,7 +197,7 @@ $(document).ready(function() {
 	   
 	   if(result === 'SUCCESS'){
 		   $(".modal-body p").html("성공하였습니다.");
-		   msg.show("slow");
+		   msg.show();
 	   }
 	   
    }
