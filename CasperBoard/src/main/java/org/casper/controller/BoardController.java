@@ -12,12 +12,14 @@ import org.casper.service.BoardService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -77,6 +79,7 @@ public class BoardController {
 		
 	}
 	
+	@PreAuthorize("principal.username == #board.mid")
 	@PostMapping("/modify")
 	public String modify(PageParam param, Board board, RedirectAttributes rttr) {
 		rttr.addFlashAttribute("result",service.modify(board) == 1?"SUCCESS":"FAIL");
@@ -84,8 +87,9 @@ public class BoardController {
 		return param.getLink("redirect:/board/read");
 	}
 	
+	@PreAuthorize("principal.username == #mid")
 	@PostMapping("/remove")
-	public String remove(PageParam param, RedirectAttributes rttr) {
+	public String remove(PageParam param, RedirectAttributes rttr, String mid) {
 		log.info("remove page.....");
 		
 		List<BoardAttachVO> attachList = service.getAttachList(param.getBno());

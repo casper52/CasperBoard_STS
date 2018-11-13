@@ -1,8 +1,12 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
+
+<%@ taglib uri="http://www.springframework.org/security/tags" prefix="sec" %>
+
 <%@include file="../includes/header.jsp"%>
-<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
+
 
 <style>
 	.uploadResult{
@@ -45,6 +49,7 @@
 		<div class="col-md-12">
 
 			<form class="form-horizontal myForm" action="/board/register" method='post'>
+			<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
 				<div class="panel panel-default">
 					<div class="panel-heading">
 						<h3 class="panel-title">
@@ -74,8 +79,10 @@
 							<div class="col-md-6 col-xs-12">
 								<div class="input-group">
 									<span class="input-group-addon"><span
-										class="fa fa-pencil"></span></span> <input type="text"
-										class="form-control" name="mid"/>
+										class="fa fa-pencil"></span></span> 
+										<input type="text" class="form-control" name="mid" 
+										value='<sec:authentication property="principal.username"/>' 
+										readonly="readonly"/>
 								</div>
 
 							</div>
@@ -175,6 +182,9 @@ $(document).ready(function(){
 		return true;
 	}
 	
+	var csrfHeaderName ="${_csrf.headerName}";
+	var csrfTokenValue="${_csrf.token}";
+	
 	$("input[type='file']").change(function(e){
 		
 		var formData = new FormData();
@@ -190,8 +200,12 @@ $(document).ready(function(){
 		$.ajax({
 			url: '/board/uploadAjaxAction',
 			processData: false,
-			contentType: false,data:
-			formData,type: 'POST',
+			contentType: false,
+			beforeSend: function(xhr){
+				xhr.setRequestHeader(csrfHeaderName, csrfTokenValue);
+			},
+			data:formData,
+			type: 'POST',
 			dataType:'json',
 			success: function(result){
 				console.log(result);
@@ -250,6 +264,9 @@ $(document).ready(function(){
 		$.ajax({
 			url: '/board/deleteFile',
 			data: {fileName: targetFile, type:type},
+			beforeSend: function(xhr){
+				xhr.setRequestHeader(csrfHeaderName, csrfTokenValue);
+			},
 			dataType:'text',
 			type: 'POST',
 				success: function(result){

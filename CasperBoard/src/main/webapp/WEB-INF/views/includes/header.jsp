@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ taglib uri="http://www.springframework.org/security/tags" prefix="sec" %>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -75,9 +76,12 @@
                     </li>   
                     <!-- END SEARCH -->
                     <!-- SIGN OUT -->
+                    
                     <li class="xn-icon-button pull-right">
-                        <a href="#" class="mb-control" data-box="#mb-signout"><span class="fa fa-sign-out"></span></a>                        
-                    </li> 
+                        <a href="/casper/logout" class="mb-control" data-box="#mb-signout"><span class="fa fa-sign-out"></span></a>                        
+                    </li>
+                   
+                   
                     <!-- END SIGN OUT -->
                     <!-- MESSAGES -->
                     <li class="xn-icon-button pull-right">

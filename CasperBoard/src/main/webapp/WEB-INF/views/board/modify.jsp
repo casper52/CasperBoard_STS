@@ -1,8 +1,10 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
+<%@ taglib uri="http://www.springframework.org/security/tags" prefix="sec" %>
 <%@include file="../includes/header.jsp"%>
-<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
+
 
 <div class='bigPictureWrapper'>
 	<div class='bigPicture'>
@@ -70,7 +72,8 @@
 	<div class="row">
 		<div class="col-md-12">
 
-			<form class="form-horizontal myForm" action="/board/modify" method='post'>
+		<form class="form-horizontal myForm" action="/board/modify" method='post'>
+			<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
 			<input type="hidden" name="bno" value="${board.bno}">
 				<div class="panel panel-default">
 					<div class="panel-heading">
@@ -131,16 +134,30 @@
 						</div>
 
 					
+					<sec:authentication property="principal" var="pinfo"/>
+					<sec:authorize access="isAuthenticated()">
+					<c:if test="${pinfo.username eq board.mid}">
 					<button id="modifyBtn" class="btn btn-info btn-block">Modify</button>
-		
+					</c:if>
+					</sec:authorize>
 					</div>
+
+				
+					</div>
+				</form>
 				</div>
-			</form>
+			
 			
 								<form role="form" action="/board/remove" method='post'>
 								 <input type="hidden" name="page" value="${pageObj.page}">
 								 <input type="hidden" name="bno" value="${pageObj.bno}">
+								 <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
+								 <sec:authentication property="principal" var="pinfo"/>
+								<sec:authorize access="isAuthenticated()">
+								<c:if test="${pinfo.username eq board.mid}">
 									<button type="submit" class="btn btn-default">Remove</button>
+								</c:if>
+								</sec:authorize>
 								</form>
 								<form role="form" action="/board/list" method='get'>
 								<input type="hidden" name="page" value="${pageObj.page}">
@@ -254,6 +271,9 @@ function checkExtension(fileName, fileSize){
 	return true;
 }
 
+var csrfHeaderName = "${_csrf.headerName}";
+var csrfTokenValue = "${_csrf.token}";
+
 $("input[type='file']").change(function(e){
 	
 	var formData = new FormData();
@@ -271,6 +291,9 @@ $("input[type='file']").change(function(e){
 		processData: false,
 		contentType: false,data:
 		formData,type: 'POST',
+		beforeSend: function(xhr){
+			xhr.setRequestHeader(csrfHeaderName, csrfTokenValue);
+		},
 		dataType:'json',
 		success: function(result){
 			console.log(result);

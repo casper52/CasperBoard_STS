@@ -1,8 +1,9 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
+<%@ taglib uri="http://www.springframework.org/security/tags" prefix="sec" %>
 <%@include file="../includes/header.jsp"%>
-<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <!-- PAGE TITLE -->
 
 <div class='bigPictureWrapper'>
@@ -106,7 +107,12 @@ padding-left:0px;
 								<form role="form" action="/board/modify" method='get'>
 									<input type='hidden' name='page' value="${pageObj.page}">
 								  	<input type='hidden' name='bno' value="${pageObj.bno}">
+								  	<sec:authentication property="principal" var="pinfo"/>
+								  	<sec:authorize access="isAuthenticated()">
+								  	<c:if test="${pinfo.username eq board.mid}">
 									<button type="submit" class="btn btn-default">Modify</button>
+									</c:if>
+									</sec:authorize>
 								</form>
 
 			<div class="comment">
@@ -126,10 +132,12 @@ padding-left:0px;
 							</div></li>
 					</ul>
 				</div>
-				<div class="panel-footer">
+					<div class="panel-footer">
 				
-				</div>
+					</div>
+				
 					<button id="addReplyBtn" class="btn btn-primary pull-left">New Comment</button>
+					
 				</div>
 			</div>
 
@@ -160,9 +168,10 @@ padding-left:0px;
 							<input type="text" class="form-control" name="replyDate" value=''/>
 						</div>
 						<div class="modal-footer">
+				
                 <button id='modalModBtn' type="button" class="btn btn-primary btn-rounded" data-dismiss="modal">Modify</button>
                 <button id='modalRemoveBtn' type="button" class="btn btn-primary btn-rounded" data-dismiss="modal">Remove</button>
-                <button id='modalRegisterBtn' type="button" class="btn btn-primary btn-rounded" data-dismiss="modal">Register</button>
+			    <button id='modalRegisterBtn' type="button" class="btn btn-primary btn-rounded" data-dismiss="modal">Register</button>
                 <button id='modalCloseBtn' type="button" class="btn btn-primary btn-rounded" data-dismiss="modal">Close</button>
                 </div>
             </div>
@@ -284,9 +293,20 @@ $(document).ready(function(){
 		var modalRegisterBtn = $("#modalRegisterBtn");
 		var modalCloseBtn = $("#modalCloseBtn");
 		
+		var replyer = null;
+		
+	<sec:authorize access="isAuthenticated()">
+		
+		replyer = '<sec:authentication property="principal.username"/>';
+	</sec:authorize>
+		
+		var csrfHeaderName = "${_csrf.headerName}";
+		var csrfTokenValue = "${_csrf.token}";
+		
 		$("#addReplyBtn").on("click",function(e){
 			
 			modal.find("input").val("");
+			modal.find("input[name='replyer']").val(replyer);
 			modalInputReplyDate.closest("div").hide();
 			modal.find("button[id !='modalCloseBtn']").hide();
 			
@@ -295,6 +315,10 @@ $(document).ready(function(){
 			$("#myModal").show();
 			
 		})
+		
+		$(document).ajaxSend(function(e, xhr, options){
+			xhr.setRequestHeader(csrfHeaderName, csrfTokenValue);
+		});
 		
 		modalRegisterBtn.on("click", function(e){
 			
@@ -318,8 +342,11 @@ $(document).ready(function(){
 		});
 		
 		$(".chat").on("click","li",function(e){
-			
+		
 			var rno = $(this).data("rno");
+			var username = "<c:out value='${pinfo.username}'/>"
+			
+			console.log("username:"+username);
 			
 			replyService.read(rno, function(reply){
 				modalInputReply.val(reply.reply);
@@ -328,8 +355,15 @@ $(document).ready(function(){
 				modal.data("rno",reply.rno);
 				
 				modal.find("button[id !='modalCloseBtn']").hide();
-				modalModBtn.show();
-				modalRemoveBtn.show();
+				
+			
+				if(username == reply.replyer){
+				
+					modalModBtn.show();
+				
+					modalRemoveBtn.show();
+				}
+			
 				
 				$("#myModal").show();
 				
@@ -355,6 +389,9 @@ $(document).ready(function(){
 			
 			var rno = modal.data("rno");
 			
+			console.log("RNO: " + rno);
+			console.log("REPLYER: " + replyer);
+
 			replyService.remove(rno, function(result){
 				
 				alert(result);
@@ -366,7 +403,7 @@ $(document).ready(function(){
 		
 		modalCloseBtn.on("click", function(e){
 			 console.log("modal close");
-			 $("#.myModal").hide();
+			 $("#myModal").hide();
 		});
 		
 		

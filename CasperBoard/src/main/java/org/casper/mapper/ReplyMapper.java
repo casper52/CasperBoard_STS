@@ -12,7 +12,7 @@ public interface ReplyMapper {
 	
 	public ReplyVO read(int bno);
 	
-	public int delete(int bno);
+	public int delete(int rno);
 	
 	public int update(ReplyVO reply);
 	

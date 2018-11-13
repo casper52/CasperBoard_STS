@@ -28,7 +28,7 @@
 			<!-- START BORDERED TABLE SAMPLE -->
 			<div class="panel panel-default">
 				<div class="panel-heading">
-					<h3 class="panel-title">List</h3>
+					<h3 class="panel-tritle">List</h3>
 					<select onchange ="change(this)">
 						<option value="10" ${pageObj.display == 10? "selected":""}>10</option>
 						<option value="20" ${pageObj.display == 20? "selected":""}>20</option>

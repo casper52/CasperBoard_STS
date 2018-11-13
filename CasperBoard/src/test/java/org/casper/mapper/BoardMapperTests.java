@@ -75,4 +75,6 @@ public class BoardMapperTests {
 		log.info("--------------------");
 		log.info("COUNT: " + mapper.count());
 	}
+	
+	
 }
