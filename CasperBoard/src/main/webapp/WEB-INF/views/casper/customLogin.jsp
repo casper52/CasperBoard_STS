@@ -6,7 +6,7 @@
 <html lang="en" class="body-full-height">
 <head>
 <!-- META SECTION -->
-<title>Casper Login</title>
+<title>Casper Board</title>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta http-equiv="X-UA-Compatible" content="IE=edge" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -45,11 +45,12 @@
 					</div>
 					<div class="form-group">
 						<div class="col-md-6">
-							<input type='checkbox' name='remember-me'><p class="text-muted">Remember Me</p>
+							<input type='checkbox' name='remember-me'><font color=white>　Remember Me</font>
 						</div>
 						<div class="col-md-6">
 							<a href="/board/list"><button class="btn btn-info btn-block">Log In</button></a>
 						</div>
+					
 					</div>
 					<input type="hidden" name="${_csrf.parameterName}"
 						value="${_csrf.token}" />
@@ -58,8 +59,7 @@
 			<div class="login-footer">
 				<div class="pull-left">&copy; 2014 AppName</div>
 				<div class="pull-right">
-					<a href="#">About</a> | <a href="#">Privacy</a> | <a href="#">Contact
-						Us</a>
+					<a href="/casper/signUp">Sign Up</a> 
 				</div>
 			</div>
 		</div>
@@ -68,13 +68,20 @@
 	<script src="https://code.jquery.com/jquery-3.3.1.min.js"
 		integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
 		crossorigin="anonymous"></script>
-
-	<script>
+<script>
 		$(".btn-info").on("click", function(e) {
 			e.preventDefault();
 			$("form").submit();
 			console.log("login clicked....")
 		})
+		
+		$(".btn-success").on("click", function(e) {
+			e.preventDefault();
+			$("form").submit();
+			console.log("signup clicked....")
+		})
+		
 	</script>
+	
 </body>
 </html>

@@ -1,5 +1,6 @@
 package org.casper.mapper;
 
+import org.casper.domain.AuthVO;
 import org.casper.domain.MemberVO;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -26,5 +27,18 @@ public class MemberMapperTests {
 		
 		vo.getAuthList().forEach(authVO -> log.info(authVO));
 	}
+	
+	@Test
+	public void testInsert() {
+		MemberVO vo = new MemberVO();
+		
+		vo.setMid("CASPER");
+		vo.setPassword("0502");
+		vo.setMname("박가영");
+		vo.setInfo("ㅎㅎ");
+		
+		log.info(mapper.insert(vo));
+	}
+
 	
 }

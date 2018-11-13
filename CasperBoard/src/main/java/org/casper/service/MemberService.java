@@ -1,12 +1,10 @@
-package org.casper.mapper;
+package org.casper.service;
 
 import org.casper.domain.AuthVO;
 import org.casper.domain.MemberVO;
 
-public interface MemberMapper {
+public interface MemberService {
 
-	public MemberVO getMember(String mid);
-	
 	public int insert(MemberVO vo);
 	
 	public int insertAuth(AuthVO vo);

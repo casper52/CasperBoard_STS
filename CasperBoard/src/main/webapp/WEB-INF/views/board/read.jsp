@@ -62,6 +62,11 @@
 list-style:none;
 padding-left:0px;
 }
+
+.content {
+	white-space: pre-wrap;
+}
+
 </style>
 <div class="page-title">
 	<h2>
@@ -85,13 +90,14 @@ padding-left:0px;
 						</div>
 						<div class="post-date" name="mid">
 							<span class="fa fa-calendar"></span> <c:out value="${board.updatedate}"/> / <a
-								href="pages-blog-post.html#comments">3 Comments</a> / <a
-								href="pages-profile.html">by <c:out value="${board.mid}"/></a>
+								href="#">3 Comments</a> / <a
+								href="#">by <c:out value="${board.mid}"/></a>
 						</div>
-						<div class="post-text" name="content">
-						<c:out value="${board.content}" />
+						<div class="content" name="content">
+						<h4><c:out value="${board.content}" /></h4>
 						
 						</div>
+						
 						<div class="panel-heading">Files</div>
 						<div class="panel-body">
 							<div class='uploadResult'>

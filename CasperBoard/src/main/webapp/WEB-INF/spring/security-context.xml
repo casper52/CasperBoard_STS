@@ -12,6 +12,7 @@
 
 	<security:http>
 		<security:intercept-url pattern="/board/*" access="hasRole('ROLE_MEMBER')"/>
+		<security:intercept-url pattern="/casper/signUp" access="permitAll"/>
 		<security:form-login login-page="/casper/customLogin"/>
 		<security:logout logout-url="/casper/logout" invalidate-session="true" delete-cookies="remember-me,JSESSION_ID"/>
 		<!-- <security:access-denied-handler ref="customAccessDenied"/> -->

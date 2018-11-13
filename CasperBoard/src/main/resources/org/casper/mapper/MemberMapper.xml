@@ -31,4 +31,12 @@
 	on member.mid = auth.mid
 	where member.mid = #{mid}
 	</select>
+	
+	<insert id="insert">
+	insert into tbl_member( mid, password, mname, info ) values (#{mid}, #{password}, #{mname}, #{info})
+	</insert>
+	
+	<insert id="insertAuth">
+	insert into tbl_member_auth(mid, auth) values (#{mid}, 'ROLE_MEMBER')
+	</insert>
 </mapper>
