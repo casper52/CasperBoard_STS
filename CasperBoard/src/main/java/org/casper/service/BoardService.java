@@ -21,4 +21,7 @@ public interface BoardService {
 	public int getTotal();
 	
 	public List<BoardAttachVO> getAttachList(int bno);
+	
+	public int updateView(PageParam param);
+	
 }

@@ -93,6 +93,12 @@ public class BoardServiceImpl implements BoardService{
 		
 		return attachMapper.findByBno(bno);
 	}
+
+	@Override
+	public int updateView(PageParam param) {
+		
+		return mapper.updateView(param);
+	}
 	
 	
 	

@@ -21,4 +21,6 @@ public interface BoardMapper {
 	
 	public int count();
 	
+	public int updateView(PageParam param);
+	
 }

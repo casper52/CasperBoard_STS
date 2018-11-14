@@ -3,7 +3,13 @@ package org.casper.controller;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.casper.domain.Board;
 import org.casper.domain.BoardAttachVO;
@@ -15,12 +21,15 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import com.mysql.jdbc.StringUtils;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.log4j.Log4j;
@@ -70,13 +79,39 @@ public class BoardController {
 		return "redirect:/board/list";
 	}
 	
-	
+
 	@GetMapping({"/read","/modify"})
-	public void readGET(@ModelAttribute("pageObj") PageParam param, Model model) {
+	public void readGET(@ModelAttribute("pageObj") PageParam param, Model model, @CookieValue(value="view",required=false) String view) {
 		log.info("read page.....");
+		log.info(view);
+		
 		model.addAttribute("board", service.read(param));
 		
+		if(view == null) {
+			service.updateView(param);
+			return;
+		}
+		boolean check=true;
+		String views[] = view.split("_");
+		log.info(views);
+		for(int i = 0; i < views.length; i++) {
+			 String viewValue = views[i];
+		
+			 if(viewValue.equals(String.valueOf(param.getBno()))) {
+				 log.info(check);
+				check=false;
+				 break;
+			 }
+			 
+		}
+		log.info(check);
+		if(check==true) {
+			service.updateView(param);
+		}
+		
+		
 	}
+
 	
 	@PreAuthorize("principal.username == #board.mid")
 	@PostMapping("/modify")

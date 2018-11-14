@@ -23,7 +23,7 @@
 </sql>
 
 	<select id="getList" resultType="org.casper.domain.Board">
-		select tb.bno, tb.title, tb.content, tb.mid, tb.regdate, tb.updatedate
+		select tb.bno, tb.title, tb.content, tb.mid, tb.view, tb.regdate, tb.updatedate
 		from tbl_board as tb
 		join tbl_member as tm
 		where 1 = 1
@@ -58,4 +58,8 @@
 		<include refid="search"></include>
 		and bno > (select max(bno) - 3000 from tbl_board)
 	</select>
+	
+	<update id="updateView">
+	update tbl_board set view = ifnull(view,0) + 1 where bno = #{bno} limit 1
+	</update>
 </mapper>
