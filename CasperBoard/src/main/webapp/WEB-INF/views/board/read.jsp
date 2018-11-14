@@ -90,7 +90,7 @@ padding-left:0px;
 						</div>
 						<div class="post-date" name="mid">
 							<span class="fa fa-calendar"></span> <c:out value="${board.updatedate}"/> / <a
-								href="#">3 Comments</a> / <a
+								href="#"><c:out value="${board.rcnt}"/> Comments</a> / <a
 								href="#">by <c:out value="${board.mid}"/></a>
 						</div>
 						<div class="content" name="content">

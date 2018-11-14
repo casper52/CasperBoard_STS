@@ -8,7 +8,7 @@ import lombok.Data;
 @Data
 public class Board {
 
-	private Integer bno, view;
+	private Integer bno, view, rcnt;
 	private String title, content, mid;
 	private Date regdate, updatedate;
 	

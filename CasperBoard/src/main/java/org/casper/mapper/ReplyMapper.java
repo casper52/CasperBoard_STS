@@ -22,5 +22,4 @@ public interface ReplyMapper {
 
 	public int getCountByBno(int bno);
 
-
 }
