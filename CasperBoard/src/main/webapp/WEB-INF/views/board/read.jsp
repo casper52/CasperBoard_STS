@@ -126,6 +126,7 @@ padding-left:0px;
 				
 					<ul class="chat">
 						<li class="media" data-rno='12'><a class="pull-left" href="#">
+						
 						<img class="media-object img-text" src="/resources/assets/images/users/no-image.jpg"
 								alt="Dmitry Ivaniuk" width="64">
 						</a>
@@ -134,8 +135,9 @@ padding-left:0px;
 								<p>
 									</p>
 								<p class="text-muted"></p>
-								
-							</div></li>
+							</div>
+							</li>
+							
 					</ul>
 				</div>
 					<div class="panel-footer">
@@ -178,6 +180,7 @@ padding-left:0px;
                 <button id='modalModBtn' type="button" class="btn btn-primary btn-rounded" data-dismiss="modal">Modify</button>
                 <button id='modalRemoveBtn' type="button" class="btn btn-primary btn-rounded" data-dismiss="modal">Remove</button>
 			    <button id='modalRegisterBtn' type="button" class="btn btn-primary btn-rounded" data-dismiss="modal">Register</button>
+			    <button id='modalRegBtn2' type="button" class="btn btn-primary btn-rounded" data-dismiss="modal">Reply</button>
                 <button id='modalCloseBtn' type="button" class="btn btn-primary btn-rounded" data-dismiss="modal">Close</button>
                 </div>
             </div>
@@ -195,6 +198,7 @@ padding-left:0px;
 
 $(document).ready(function(){
 	
+		//댓글 출력
 		var bno = '<c:out value="${pageObj.bno}"/>';
 		var replyUL = $(".chat");
 		
@@ -221,19 +225,26 @@ $(document).ready(function(){
 				}
 				for(var i = 0, len = list.length || 0; i < len; i++){
 					str +="<li class='media' data-rno='"+list[i].rno+"'>";
-					str +="<a class='pull-left' href='#''> <img class='media-object img-text' src='/resources/assets/images/users/user.jpg' alt='Dmitry Ivaniuk' width='64'></a>";
+					if(list[i].depth == 1){
+					str +="<a class='pull-left' href='#'> <img class='media-object img-text' src='/resources/assets/images/users/user.jpg' alt='Dmitry Ivaniuk' width='64'></a>";
 					str +="<div class='media-body'><p class='text-warning'>"+list[i].replyer+"</h4>";
+					}else{
+						str +="<a class='pull-left' href='#''> <img class='media-object img-text' src='/resources/assets/images/users/user.jpg' alt='Dmitry Ivaniuk' width='64'></a>"
+							str +="<div class='media-body'><p class='text-warning'>"+list[i].replyer+"</h4>";
+					}
 					str +="<p>"+list[i].reply+"</p>";
-					str +="<p class='text-muted'>"+replyService.displayTime(list[i].replyDate)+"</p></div></li></ul>"
-			
+					str +="<p class='text-muted'>"+replyService.displayTime(list[i].replyDate)+"</p></div></li><div><button id='addRereplyBtn' type='button' class='btn btn-primary btn-rounded pull-right' data-parent='"+list[i].parent+"' data-rno='"+list[i].rno+"'>댓글</button></div></ul>";
+					
 				}
 				
+			parent=list[list.length-1].parent;	
 			replyUL.html(str);
 			
 			showReplyPage(replyCnt);
 			});
 		}
 		
+		//댓글 페이징
 		var pageNum = 1;
 		var replyPageFooter = $(".panel-footer");
 		
@@ -272,7 +283,7 @@ $(document).ready(function(){
 			
 			str += "</ul>";
 			
-			console.log(str);
+			
 			replyPageFooter.html(str);
 		}
 		
@@ -289,6 +300,7 @@ $(document).ready(function(){
 			showList(pageNum);
 		})
 		
+		//댓글 모달창
 		var modal = $("#myModal");
 		var modalInputReply = modal.find("input[name='reply']");
 		var modalInputReplyer = modal.find("input[name='replyer']");
@@ -297,6 +309,7 @@ $(document).ready(function(){
 		var modalModBtn = $("#modalModBtn");
 		var modalRemoveBtn = $("#modalRemoveBtn");
 		var modalRegisterBtn = $("#modalRegisterBtn");
+		var modalRegBtn2=$("#modalRegBtn2");
 		var modalCloseBtn = $("#modalCloseBtn");
 		
 		var replyer = null;
@@ -306,9 +319,9 @@ $(document).ready(function(){
 		replyer = '<sec:authentication property="principal.username"/>';
 	</sec:authorize>
 		
-		var csrfHeaderName = "${_csrf.headerName}";
-		var csrfTokenValue = "${_csrf.token}";
 		
+		
+		//댓글 추가 모달
 		$("#addReplyBtn").on("click",function(e){
 			
 			modal.find("input").val("");
@@ -322,16 +335,40 @@ $(document).ready(function(){
 			
 		})
 		
+		//대댓글 추가 모달
+		$(".chat").on("click","button",function(e){
+			
+			console.log("add rereply....")
+			var btn = e.target;
+			modal.find("input").val("");
+			parent=btn.getAttribute("data-parent");
+			modal.find("input[name='replyer']").val(replyer);
+			modalInputReplyDate.closest("div").hide();
+			modal.find("button[id !='modalCloseBtn']").hide();
+			
+			modalRegBtn2.show();
+			
+			$("#myModal").show();
+			
+		})
+		
+		//시큐리티 csrf토큰
+		var csrfHeaderName = "${_csrf.headerName}";
+		var csrfTokenValue = "${_csrf.token}";
+		
 		$(document).ajaxSend(function(e, xhr, options){
 			xhr.setRequestHeader(csrfHeaderName, csrfTokenValue);
 		});
 		
+		//댓글 등록
 		modalRegisterBtn.on("click", function(e){
 			
 			var reply = {
 				reply: modalInputReply.val(),
 				replyer: modalInputReplyer.val(),
-				bno: bno
+				bno: bno,
+				parent:++parent,
+				depth:0
 			};
 			
 			replyService.add(reply, function(result){
@@ -347,6 +384,26 @@ $(document).ready(function(){
 			
 		});
 		
+		//대댓글 등록
+		modalRegBtn2.on("click",function(e){
+			var reply = {
+					reply: modalInputReply.val(),
+					replyer: modalInputReplyer.val(),
+					bno: bno,
+					parent:parent,
+					depth:1
+			};
+			replyService.add(reply,function(result){
+				alert(result);
+				
+				modal.find("input").val("");
+				modal.hide();
+				showList(-1);
+			});
+			
+		})
+		
+		//댓글 작성자에게 수정, 삭제버튼 보이기
 		$(".chat").on("click","li",function(e){
 		
 			var rno = $(this).data("rno");
@@ -377,6 +434,7 @@ $(document).ready(function(){
 			
 		});
 		
+		//댓글 수정
 		modalModBtn.on("click", function(e){
 			
 			var reply = {rno:modal.data("rno"), reply:modalInputReply.val()};
@@ -391,6 +449,7 @@ $(document).ready(function(){
 			
 		});
 		
+		//댓글 삭제
 		modalRemoveBtn.on("click", function(e){
 			
 			var rno = modal.data("rno");
@@ -407,13 +466,14 @@ $(document).ready(function(){
 			});
 		});
 		
+		//모달창 클로즈
 		modalCloseBtn.on("click", function(e){
 			 console.log("modal close");
 			 $("#myModal").hide();
 		});
 		
 		
-		
+		//첨부파일 출력
 		$.getJSON("/board/getAttachList", {bno: bno}, function(arr){
 			console.log(arr);
 			

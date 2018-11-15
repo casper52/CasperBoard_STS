@@ -7,8 +7,8 @@
 <mapper namespace="org.casper.mapper.ReplyMapper">
 
 	<insert id="insert">
-		insert into tbl_reply(bno, reply, replyer)
-		values (#{bno},#{reply},#{replyer})
+		insert into tbl_reply(bno, reply, replyer, parent, depth)
+		values (#{bno},#{reply},#{replyer},#{parent},#{depth})
 	</insert>
 	
 	<select id="read" resultType="org.casper.domain.ReplyVO">
@@ -27,7 +27,7 @@
 		select rno, bno, reply, replyer, replyDate, updateDate
 		from tbl_reply
 		where bno = #{bno}
-		order by rno asc
+		order by parent asc, rno asc
 		limit #{param.skip},#{param.display}
 	</select>
 	

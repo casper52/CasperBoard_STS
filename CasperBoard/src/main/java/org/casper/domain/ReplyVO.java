@@ -7,7 +7,7 @@ import lombok.Data;
 @Data
 public class ReplyVO {
 
-	private int rno, bno;
+	private int rno, bno, parent, depth;
 	private String reply, replyer;
 	private Date replyDate, updateDate;
 }
