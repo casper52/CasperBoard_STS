@@ -153,7 +153,7 @@ padding-left:0px;
 
 </div>
 <!-- END PAGE CONTENT WRAPPER -->
-<div class="modal in" id="myModal" tabindex="-1" role="dialog" aria-labelledby="largeModalHead" aria-hidden="false" style="display:none;"><div class="modal-backdrop  in"></div>
+<div class="modal in" id="myModal"  role="dialog" aria-labelledby="largeModalHead" aria-hidden="false" style="display:none;"><div class="modal-backdrop  in"></div>
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">

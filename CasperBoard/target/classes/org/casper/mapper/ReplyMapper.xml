@@ -27,7 +27,8 @@
 		select rno, bno, reply, replyer, replyDate, updateDate
 		from tbl_reply
 		where bno = #{bno}
-		order by rno asc limit #{param.skip},#{param.display}
+		order by rno asc
+		limit #{param.skip},#{param.display}
 	</select>
 	
 	<select id="getCountByBno" resultType="int">
